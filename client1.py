@@ -12,18 +12,12 @@ class Send(threading.Thread):
     def run(self):
         while True:
             sys.stdout.flush()
-            
-            
             my_msg = input()
-            
-            
-            
-
             if my_msg.lower() =="quit":
                 self.sock.sendall(f"{self.name} is quitting the chat...".encode("utf-8"))
                 break
             else:
-                self.sock.sendall(f"<<{self.name}>> : {my_msg}".encode("utf-8"))
+                self.sock.sendall(f"<<{self.name}>> : {my_msg}\n".encode("utf-8"))
         print("Quitting chat...\n")
         os._exit(0)
 
@@ -37,8 +31,8 @@ class Recieve(threading.Thread):
         while True:
             msg = self.sock.recv(2048).decode("utf-8")
             if msg:
-                print(msg)
-                print('\n<<You>> :',end='')
+                print('\r'+msg)
+                print('\n<<You>> : ',end='')
             else:
                 print("Looks like the connection is lost...\nQuitting...\n")
                 self.sock.close()
@@ -62,7 +56,7 @@ class Client():
 
         
         print()
-        print("All set, type 'QUIT' to leave...\n<<You>> :",end='')
+        print("All set, type 'QUIT' to leave...\n<<You>> : ",end='')
         recieve.start()
         send.start()
         
